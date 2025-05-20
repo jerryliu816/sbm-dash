@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f0f4f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2em;
+        height: 100vh;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-gap: 20px;
+      }
+
+      .app-icon {
+        width: 100px;
+        height: 100px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: #1f2937;
+        font-size: 0.9em;
+        transition: transform 0.1s ease;
+      }
+
+      .app-icon:hover {
+        transform: scale(1.05);
+        background-color: #e0edff;
+      }
+
+      .emoji {
+        font-size: 1.8em;
+        margin-bottom: 0.4em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title">Board Member Dashboard</h1>
+    <div class="grid" id="appGrid">
+      <!-- Icons will be injected here -->
+    </div>
+
+    <script>
+      // ✅ Set your deployment base URL once here
+      const baseUrl = "https://script.google.com/macros/s/AKfycbzaLy7wS4kRXEbWH-0hyxqhYKRMieihiMZ6DyipfCndAyDfzKusYYaKMlC20WOvMCIjvA/exec";
+
+      const apps = [
+        { emoji: '📄', label: 'IEP analysis', view: 'iep' },
+        { emoji: '📬', label: 'Gmail analysis', view: 'gmail' },
+        { emoji: '📄', label: 'LCAP analysis', view: 'lcap' } // Placeholder
+      ];
+
+      const grid = document.getElementById('appGrid');
+
+      apps.forEach(app => {
+        const a = document.createElement('a');
+        a.className = 'app-icon';
+        a.href = app.view === '#' ? '#' : `${baseUrl}?view=${app.view}`;
+        a.innerHTML = `
+          <div class="emoji">${app.emoji}</div>
+          <div>${app.label}</div>`;
+        grid.appendChild(a);
+      });
+    </script>
+  </body>
+</html>

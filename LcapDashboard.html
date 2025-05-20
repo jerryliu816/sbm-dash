@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 250px;
+        background: #f0f4ff;
+        padding: 1em;
+        border-right: 1px solid #ccc;
+      }
+      .sidebar select,
+      .sidebar button {
+        width: 100%;
+        margin-bottom: 1em;
+        padding: 0.5em;
+        font-size: 1em;
+      }
+      .main {
+        flex: 1;
+        padding: 2em;
+        overflow-y: auto;
+        background-color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <select id="fileSelect"></select>
+      <button onclick="analyze()">Analyze Selected File</button>
+    </div>
+    <div class="main" id="result">
+      <p>Select a file and click “Analyze” to begin.</p>
+    </div>
+
+<script>
+  function loadFiles() {
+    google.script.run.withSuccessHandler(function(files) {
+      const select = document.getElementById("fileSelect");
+      files.forEach(file => {
+        const opt = document.createElement("option");
+        opt.value = file.id;
+        opt.innerText = file.name;
+        select.appendChild(opt);
+      });
+    }).getUserFiles();
+  }
+
+  function analyze() {
+    const fileId = document.getElementById("fileSelect").value;
+    document.getElementById("result").innerHTML = "<p><em>Processing...</em></p>";
+
+    google.script.run.withSuccessHandler(function(response) {
+      // Inject styles into <head>
+      const style = document.createElement("style");
+      style.innerHTML = response.css;
+      document.head.appendChild(style);
+
+      // Render main HTML into result pane
+      document.getElementById("result").innerHTML = response.html;
+    }).analyzeSelectedLcap(fileId);
+  }
+
+  loadFiles();
+</script>
+
+  </body>
+</html>

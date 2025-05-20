@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body { font-family: Arial; padding: 20px; }
+      canvas { max-width: 100%; }
+    </style>
+  </head>
+  <body>
+    <h2>📬 Gmail Message Traffic (Last 14 Days)</h2>
+    <canvas id="emailChart" width="600" height="400"></canvas>
+
+    <script>
+      google.script.run.withSuccessHandler(drawChart).getEmailHistogramData();
+
+      function drawChart(data) {
+        const ctx = document.getElementById('emailChart').getContext('2d');
+        const labels = data.map(entry => entry.date);
+        const counts = data.map(entry => entry.count);
+
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: '# of Emails Received',
+              data: counts,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              x: { title: { display: true, text: 'Date' } },
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Messages' }
+              }
+            }
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
+
