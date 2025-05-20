@@ -3,6 +3,11 @@ function getIepFolder() {
   return folders.hasNext() ? folders.next() : DriveApp.createFolder("iep");
 }
 
+function getLcapFolder() {
+  const folders = DriveApp.getFoldersByName("lcap");
+  return folders.hasNext() ? folders.next() : DriveApp.createFolder("lcap");
+}
+
 function getUserFiles() {
   const folder = getIepFolder();
   const files = folder.getFilesByType(MimeType.PDF);

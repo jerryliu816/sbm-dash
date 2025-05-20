@@ -1,5 +1,6 @@
 function doGet(e) {
   const view = e.parameter.view;
+
   switch (view) {
     case "iep":
       return HtmlService.createHtmlOutputFromFile("IepDashboard");
@@ -12,7 +13,13 @@ function doGet(e) {
   }
 }
 
-function analyzeUploadedPDFById(fileId) {
+
+function loadPrompt(fileName) {
+  return HtmlService.createHtmlOutputFromFile(fileName).getContent().trim();
+}
+
+
+function analyzeUploadedPDFAndSave(fileId) {
   const file = DriveApp.getFileById(fileId);
   const rawText = extractTextFromPDF(file);
   const cleanedText = cleanExtractedText(rawText);
@@ -24,8 +31,8 @@ function analyzeUploadedPDFById(fileId) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const folder = getIepFolder();
 
-  folder.createFile(`LLM_input_${file.getName()}.txt`, fullPrompt, MimeType.PLAIN_TEXT);
-  folder.createFile(`LLM_output_${file.getName()}_${timestamp}.txt`, result, MimeType.PLAIN_TEXT);
+  //folder.createFile(`LLM_input_${file.getName()}.txt`, fullPrompt, MimeType.PLAIN_TEXT);
+  //folder.createFile(`LLM_output_${file.getName()}_${timestamp}.txt`, result, MimeType.PLAIN_TEXT);
   folder.createFile(`LLM_output_${file.getName()}_${timestamp}.html`, html, MimeType.HTML);
 
   return result;
@@ -35,8 +42,9 @@ function analyzeSelectedLcap(fileId) {
   const file = DriveApp.getFileById(fileId);
   const rawText = extractTextFromPDF(file);
   const cleanedText = cleanExtractedText(rawText);
-  const prompt = "Analyze this LCAP and provide brief summary.";
+  const prompt = loadPrompt("LcapPrompt");  // 🔁 loads from file
   const fullPrompt = prompt + "\n\n" + cleanedText;
+
   const result = callGemini(fullPrompt);
   const html = formatLLMOutputAsHTML(result);
 
@@ -48,6 +56,7 @@ function analyzeSelectedLcap(fileId) {
     html: bodyMatch ? bodyMatch[1] : "<p>No content parsed.</p>"
   };
 }
+
 
 function analyzeSelectedFile(fileId) {
   const file = DriveApp.getFileById(fileId);

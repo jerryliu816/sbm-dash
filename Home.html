@@ -7,10 +7,18 @@
         font-family: sans-serif;
         background-color: #f0f4f8;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
         padding: 2em;
         height: 100vh;
+      }
+
+      h1.title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #1e3a8a;
+        margin-bottom: 1.5em;
+        text-align: center;
       }
 
       .grid {
@@ -48,31 +56,30 @@
   </head>
   <body>
     <h1 class="title">Board Member Dashboard</h1>
-    <div class="grid" id="appGrid">
-      <!-- Icons will be injected here -->
-    </div>
+    <div class="grid" id="appGrid"></div>
 
-    <script>
-      // ✅ Set your deployment base URL once here
-      const baseUrl = "https://script.google.com/macros/s/AKfycbzaLy7wS4kRXEbWH-0hyxqhYKRMieihiMZ6DyipfCndAyDfzKusYYaKMlC20WOvMCIjvA/exec";
+<script>
+  const baseUrl = "https://script.google.com/macros/s/AKfycbxkSmo3Ypau7oetwF4TfzXbYzxCYJ978QDX5Tt24a6qdupd9Eo5WA5FaYs4zeKvret05g/exec";
 
-      const apps = [
-        { emoji: '📄', label: 'IEP analysis', view: 'iep' },
-        { emoji: '📬', label: 'Gmail analysis', view: 'gmail' },
-        { emoji: '📄', label: 'LCAP analysis', view: 'lcap' } // Placeholder
-      ];
+  const apps = [
+    { emoji: '📄', label: 'IEP analysis', view: 'iep' },
+    { emoji: '📬', label: 'Gmail analysis', view: 'gmail' },
+    { emoji: '📄', label: 'LCAP analysis', view: 'lcap' }
+  ];
 
-      const grid = document.getElementById('appGrid');
+  const grid = document.getElementById('appGrid');
 
-      apps.forEach(app => {
-        const a = document.createElement('a');
-        a.className = 'app-icon';
-        a.href = app.view === '#' ? '#' : `${baseUrl}?view=${app.view}`;
-        a.innerHTML = `
-          <div class="emoji">${app.emoji}</div>
-          <div>${app.label}</div>`;
-        grid.appendChild(a);
-      });
-    </script>
+  apps.forEach(app => {
+    const a = document.createElement('a');
+    a.className = 'app-icon';
+    a.href = `${baseUrl}?view=${app.view}`;
+    a.innerHTML = `
+      <div class="emoji">${app.emoji}</div>
+      <div>${app.label}</div>`;
+    grid.appendChild(a);
+  });
+</script>
+
+
   </body>
 </html>
